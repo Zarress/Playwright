@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+const sampleProjectData = {
+  title: 'title test',
+  description: 'description test',
+  date: '2024-10-01'
+};
+
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:5173/');
 });
@@ -17,12 +23,6 @@ test('create new project button', async ({ page }) => {
 });
 
 test('create new project (with data check)', async ({ page }) => {
-  const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    date: '2024-10-01'
-  };
-
   await page.getByRole('button', { name: 'Create new project' }).click();
 
   await page.getByLabel('Title').fill(sampleProjectData.title);
@@ -62,12 +62,6 @@ test('cancel creating new project', async ({ page }) => {
 });
 
 test('delete created project', async ({ page }) => {
-  const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    date: '2024-10-01'
-  };
-
   await page.getByRole('button', { name: 'Create new project' }).click();
 
   await page.getByLabel('Title').fill(sampleProjectData.title);
@@ -92,12 +86,6 @@ test('delete created project', async ({ page }) => {
 });
 
 test('cancel deleting created project', async ({ page }) => {
-  const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    date: '2024-10-01'
-  };
-
   await page.getByRole('button', { name: 'Create new project' }).click();
 
   await page.getByLabel('Title').fill(sampleProjectData.title);
@@ -121,12 +109,6 @@ test('cancel deleting created project', async ({ page }) => {
 });
 
 test('add task to created project', async ({ page }) => {
-  const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    date: '2024-10-01'
-  };
-
   await page.getByRole('button', { name: 'Create new project' }).click();
 
   await page.getByLabel('Title').fill(sampleProjectData.title);
@@ -139,7 +121,7 @@ test('add task to created project', async ({ page }) => {
 
   await page.getByText(sampleProjectData.title).click();
 
-  const sampleTaskName = 'test tasl';
+  const sampleTaskName = 'test task';
 
   await page.getByPlaceholder('Enter task name ...').fill(sampleTaskName);
 
@@ -158,13 +140,7 @@ test('add task to created project', async ({ page }) => {
   await expect(page.locator('section ul li p').nth(1)).toContainText(sampleTaskName);
 });
 
-test('clear created task', async ({ page }) => {
-  const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    date: '2024-10-01'
-  };
-
+test('cannot add task with empty name', async ({ page }) => {
   await page.getByRole('button', { name: 'Create new project' }).click();
 
   await page.getByLabel('Title').fill(sampleProjectData.title);
@@ -177,7 +153,26 @@ test('clear created task', async ({ page }) => {
 
   await page.getByText(sampleProjectData.title).click();
 
-  const sampleTaskName = 'test tasl';
+  await page.getByRole('button', { name: '+ Add Task' }).click();
+
+  await expect(page.locator('section ul li')).not.toBeVisible();
+  await expect(page.getByText('No tasks added yet')).toBeVisible();
+});
+
+test('clear created task', async ({ page }) => {
+  await page.getByRole('button', { name: 'Create new project' }).click();
+
+  await page.getByLabel('Title').fill(sampleProjectData.title);
+
+  await page.getByLabel('Description').fill(sampleProjectData.description);
+
+  await page.getByLabel('Due date').fill(sampleProjectData.date);
+  
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  await page.getByText(sampleProjectData.title).click();
+
+  const sampleTaskName = 'test task';
   
   await page.getByPlaceholder('Enter task name ...').fill(sampleTaskName);
 
