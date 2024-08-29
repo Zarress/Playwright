@@ -7,7 +7,7 @@ const sampleProjectData = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5173/');
+  await page.goto('https://zarress.github.io/Project-Manager-App/');
 });
 
 test('has title', async ({ page }) => {
