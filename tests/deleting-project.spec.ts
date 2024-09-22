@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CreateNewProject } from '../page-objects/createNewProject';
-import { NoProjectSelected } from '../page-objects/noProjectSelected';
-import { ProjectDetails } from '../page-objects/projectDetails';
-import { SidebarMenu } from '../page-objects/sidebarMenu';
+import { PageManager } from '../page-objects/pageManager';
 
 const sampleProjectData = {
     title: 'title test',
@@ -13,34 +10,30 @@ const sampleProjectData = {
 test.beforeEach(async ({ page }) => {
     await page.goto('https://zarress.github.io/Project-Manager-App/');
 
-    const onNoProjectSelectedPage = new NoProjectSelected(page);
-    const onCreateNewProjectPage = new CreateNewProject(page);
-    const onSidebarMenu = new SidebarMenu(page);
+    const pm = new PageManager(page);
 
-    await onNoProjectSelectedPage.clickCreateNewProjectButton();
-    await onCreateNewProjectPage.createNewProject(sampleProjectData.title, sampleProjectData.description, sampleProjectData.dueDate);
-    await onSidebarMenu.navigateToProjectDetails(sampleProjectData.title);
+    await pm.onNoProjectSelectedPage().clickCreateNewProjectButton();
+    await pm.onCreateNewProjectPage().createNewProject(sampleProjectData.title, sampleProjectData.description, sampleProjectData.dueDate);
+    await pm.onSidebarMenu().navigateToProjectDetails(sampleProjectData.title);
 });
 
 test('Delete project', async ({page}) => {
-    const onProjectDetailsPage = new ProjectDetails(page);
-    const onSidebarMenu = new SidebarMenu(page);
+    const pm = new PageManager(page);
 
-    await onProjectDetailsPage.clickDeleteProjectButton();
-    await onProjectDetailsPage.clickConfirmDeletingButton();
+    await pm.onProjectDetailsPage().clickDeleteProjectButton();
+    await pm.onProjectDetailsPage().clickConfirmDeletingButton();
     
-    await expect(onSidebarMenu.getProjectLocator(sampleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu().getProjectLocator(sampleProjectData.title)).not.toBeVisible();
 
     await page.reload();
   
-    await expect(onSidebarMenu.getProjectLocator(sampleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu().getProjectLocator(sampleProjectData.title)).not.toBeVisible();
 });
 
 test('Cancel deleting project', async ({page}) => {
-    const onProjectDetailsPage = new ProjectDetails(page);
-    const onSidebarMenu = new SidebarMenu(page);
+    const pm = new PageManager(page);
 
-    await onProjectDetailsPage.clickDeleteProjectButton();
-    await onProjectDetailsPage.clickCancelDeletingButton();
-    await expect(onSidebarMenu.projectItems).toContainText(sampleProjectData.title);
+    await pm.onProjectDetailsPage().clickDeleteProjectButton();
+    await pm.onProjectDetailsPage().clickCancelDeletingButton();
+    await expect(pm.onSidebarMenu().projectItems).toContainText(sampleProjectData.title);
 });
