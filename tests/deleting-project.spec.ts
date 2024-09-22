@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
-
-const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    dueDate: '2024-10-01'
-  };
+import { simpleProjectData } from '../test-data/projectTestData';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('https://zarress.github.io/Project-Manager-App/');
@@ -13,8 +8,8 @@ test.beforeEach(async ({ page }) => {
     const pm = new PageManager(page);
 
     await pm.onNoProjectSelectedPage().clickCreateNewProjectButton();
-    await pm.onCreateNewProjectPage().createNewProject(sampleProjectData.title, sampleProjectData.description, sampleProjectData.dueDate);
-    await pm.onSidebarMenu().navigateToProjectDetails(sampleProjectData.title);
+    await pm.onCreateNewProjectPage().createNewProject(simpleProjectData.title, simpleProjectData.description, simpleProjectData.dueDate);
+    await pm.onSidebarMenu().navigateToProjectDetails(simpleProjectData.title);
 });
 
 test('Delete project', async ({page}) => {
@@ -23,11 +18,11 @@ test('Delete project', async ({page}) => {
     await pm.onProjectDetailsPage().clickDeleteProjectButton();
     await pm.onProjectDetailsPage().clickConfirmDeletingButton();
     
-    await expect(pm.onSidebarMenu().getProjectLocator(sampleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu().getProjectLocator(simpleProjectData.title)).not.toBeVisible();
 
     await page.reload();
   
-    await expect(pm.onSidebarMenu().getProjectLocator(sampleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu().getProjectLocator(simpleProjectData.title)).not.toBeVisible();
 });
 
 test('Cancel deleting project', async ({page}) => {
@@ -35,5 +30,5 @@ test('Cancel deleting project', async ({page}) => {
 
     await pm.onProjectDetailsPage().clickDeleteProjectButton();
     await pm.onProjectDetailsPage().clickCancelDeletingButton();
-    await expect(pm.onSidebarMenu().projectItems).toContainText(sampleProjectData.title);
+    await expect(pm.onSidebarMenu().projectItems).toContainText(simpleProjectData.title);
 });

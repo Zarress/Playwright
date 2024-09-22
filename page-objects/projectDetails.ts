@@ -33,14 +33,6 @@ export class ProjectDetails {
         this.taskClearButton = page.locator('section ul li button');
     }
 
-    async getFormattedDate(date: string) {
-        return new Date (date).toLocaleDateString('pl-PL', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        });
-    }
-
     // Actions
     async clickDeleteProjectButton() {
         await this.deleteProjectButton.click();

@@ -1,11 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
-
-const sampleProjectData = {
-    title: 'title test',
-    description: 'description test',
-    dueDate: '2024-10-01'
-  };
+import { simpleProjectData } from '../test-data/projectTestData';
+import { getFormattedDate } from '../helpers/dateHelper';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('https://zarress.github.io/Project-Manager-App/');
@@ -17,20 +13,20 @@ test.beforeEach(async ({ page }) => {
 test('Add project and check data stored', async ({ page }) => {
     const pm = new PageManager(page);
     
-    await pm.onCreateNewProjectPage().createNewProject(sampleProjectData.title, sampleProjectData.description, sampleProjectData.dueDate);
+    await pm.onCreateNewProjectPage().createNewProject(simpleProjectData.title, simpleProjectData.description, simpleProjectData.dueDate);
 
-    await expect(pm.onSidebarMenu().projectItems).toContainText(sampleProjectData.title);
+    await expect(pm.onSidebarMenu().projectItems).toContainText(simpleProjectData.title);
 
     await page.reload();
-    await expect(pm.onSidebarMenu().projectItems).toContainText(sampleProjectData.title);
+    await expect(pm.onSidebarMenu().projectItems).toContainText(simpleProjectData.title);
 
-    await pm.onSidebarMenu().navigateToProjectDetails(sampleProjectData.title);
+    await pm.onSidebarMenu().navigateToProjectDetails(simpleProjectData.title);
 
-    await expect(pm.onProjectDetailsPage().projectTitle).toContainText(sampleProjectData.title);
+    await expect(pm.onProjectDetailsPage().projectTitle).toContainText(simpleProjectData.title);
 
-    await expect(pm.onProjectDetailsPage().projectDescription).toHaveText(sampleProjectData.description);
+    await expect(pm.onProjectDetailsPage().projectDescription).toHaveText(simpleProjectData.description);
 
-    const formattedDate = await pm.onProjectDetailsPage().getFormattedDate(sampleProjectData.dueDate);
+    const formattedDate = getFormattedDate(simpleProjectData.dueDate);
     await expect(pm.onProjectDetailsPage().projectDueDate).toContainText(formattedDate);
 });
 
