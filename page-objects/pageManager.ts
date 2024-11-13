@@ -19,19 +19,19 @@ export class PageManager {
         this.projectDetails = new ProjectDetails(this.page);
     }
 
-    onSidebarMenu() {
+    get onSidebarMenu() {
         return this.sidebarMenu;
     }
 
-    onNoProjectSelectedPage() {
+    get onNoProjectSelectedPage() {
         return this.noProjectSelected;
     }
 
-    onCreateNewProjectPage() {
+    get onCreateNewProjectPage() {
         return this.createNewProject;
     }
 
-    onProjectDetailsPage() {
+    get onProjectDetailsPage() {
         return this.projectDetails;
     }
 }

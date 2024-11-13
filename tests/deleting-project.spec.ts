@@ -7,28 +7,28 @@ test.beforeEach(async ({ page }) => {
 
     const pm = new PageManager(page);
 
-    await pm.onNoProjectSelectedPage().clickCreateNewProjectButton();
-    await pm.onCreateNewProjectPage().createNewProject(simpleProjectData.title, simpleProjectData.description, simpleProjectData.dueDate);
-    await pm.onSidebarMenu().navigateToProjectDetails(simpleProjectData.title);
+    await pm.onNoProjectSelectedPage.clickCreateNewProjectButton();
+    await pm.onCreateNewProjectPage.createNewProject(simpleProjectData.title, simpleProjectData.description, simpleProjectData.dueDate);
+    await pm.onSidebarMenu.navigateToProjectDetails(simpleProjectData.title);
 });
 
 test('Delete project', async ({page}) => {
     const pm = new PageManager(page);
 
-    await pm.onProjectDetailsPage().clickDeleteProjectButton();
-    await pm.onProjectDetailsPage().clickConfirmDeletingButton();
+    await pm.onProjectDetailsPage.clickDeleteProjectButton();
+    await pm.onProjectDetailsPage.clickConfirmDeletingButton();
     
-    await expect(pm.onSidebarMenu().getProjectLocator(simpleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu.getProjectLocator(simpleProjectData.title)).not.toBeVisible();
 
     await page.reload();
   
-    await expect(pm.onSidebarMenu().getProjectLocator(simpleProjectData.title)).not.toBeVisible();
+    await expect(pm.onSidebarMenu.getProjectLocator(simpleProjectData.title)).not.toBeVisible();
 });
 
 test('Cancel deleting project', async ({page}) => {
     const pm = new PageManager(page);
 
-    await pm.onProjectDetailsPage().clickDeleteProjectButton();
-    await pm.onProjectDetailsPage().clickCancelDeletingButton();
-    await expect(pm.onSidebarMenu().projectItems).toContainText(simpleProjectData.title);
+    await pm.onProjectDetailsPage.clickDeleteProjectButton();
+    await pm.onProjectDetailsPage.clickCancelDeletingButton();
+    await expect(pm.onSidebarMenu.projectItems).toContainText(simpleProjectData.title);
 });
